@@ -20,7 +20,11 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    sh 'docker stop ci-cd-app-container || true && docker rm ci-cd-app-container || true'
+                    // Stop and remove the old container (if any)
+                    sh 'docker stop ci-cd-app-container || true'
+                    sh 'docker rm ci-cd-app-container || true'
+
+                    // Deploy the new container
                     sh 'docker run -d -p 3000:3000 --name ci-cd-app-container ci-cd-app'
                 }
             }
