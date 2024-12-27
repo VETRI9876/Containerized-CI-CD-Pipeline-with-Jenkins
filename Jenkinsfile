@@ -12,7 +12,14 @@ pipeline {
         stage('Test') {
             steps {
                 script {
+                    // Stop and remove the existing container, if any
+                    sh 'docker stop ci-cd-app-container || true'
+                    sh 'docker rm ci-cd-app-container || true'
+                    
+                    // Run the new container
                     sh 'docker run -d -p 3000:3000 --name ci-cd-app-container ci-cd-app'
+                    
+                    // Check if the app is accessible
                     sh 'curl -f http://localhost:3000 || exit 1'
                 }
             }
